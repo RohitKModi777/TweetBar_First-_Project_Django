@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}All Tweets{% endblock %}
+
+{% block content %}
+<h1 class="text-center my-4">Welcome to TweetBar 🐦</h1>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-2">
+  <!-- Search form -->
+  <form method="get" action="{% url 'tweet_list' %}" class="d-flex w-100" style="max-width: 500px;">
+    <input 
+      type="text" 
+      name="q" 
+      value="{{ query }}" 
+      class="form-control me-2" 
+      placeholder="🔍 Search tweets or users..."
+    >
+    <button type="submit" class="btn btn-outline-warning">Search</button>
+  </form>
+
+  <!-- Create button -->
+  <a href="{% url 'tweet_create' %}" class="btn btn-warning">+ Create Tweet</a>
+</div>
+
+<hr class="text-secondary" />
+
+<div class="row justify-content-center">
+  {% for tweet in tweets %}
+  <div class="col-md-4 col-sm-6 mb-4">
+    <div class="card h-100">
+      <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Tweet image">
+      <div class="card-body">
+        <h5 class="card-title">{{ tweet.user.username }}</h5>
+        <p class="card-text">{{ tweet.text }}</p>
+
+        {% if tweet.user == user %}
+        <div class="d-flex gap-2">
+          <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary btn-sm">Edit</a>
+          <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm">Delete</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-center text-secondary mt-4">No tweets found. Try a different search 🔍</p>
+  {% endfor %}
+</div>
+{% endblock %}
